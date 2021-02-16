@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react';
 import './App.css';
+import {StoryCard} from './components/StoryCard'
+import {apiURL} from './util/common'
 
-function App() {
+const newStoriesURL = `${apiURL}/newstories.json`
+
+const App = () => {
+  const [storyIds, setStoryIds] = useState<number[] | undefined>();
+
+  useEffect(() => {
+    fetch(newStoriesURL).then(response => { 
+            if (response.ok) {
+                return response.json()
+            } else {
+                // handle some stuff here
+                return []
+            }
+        })
+        .then(data => {
+          console.log("data", data)
+          setStoryIds(data)
+        })
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1><span className="hn-title">HN</span>Re</h1>
+      <p>Hacker News Reader</p>
+      <div className="story-container">
+        {storyIds ? storyIds.slice(0, 5).map(id => <StoryCard key={id} storyId={id} />) : null}
+      </div>
     </div>
   );
 }

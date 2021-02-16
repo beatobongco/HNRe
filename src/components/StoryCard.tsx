@@ -24,12 +24,17 @@ export const StoryCard: React.FC<StoryCardProps> = ({storyId}) => {
   }, [storyId])
 
   if (storyData) {
-    const {title, url, time, score, by} = storyData
+    const {title, time, score, by} = storyData
+    let {url} = storyData
     const domain = storyData.url ? `(${url.split("/").slice(1,3)[1]})` : null
     
     let parsedDate = ""
     if (time) {
         parsedDate = parseUnixTimestamp(time)
+    }
+    let commentURL = `https://news.ycombinator.com/item?id=${storyId}`
+    if (!url) {
+        url = commentURL
     }
     return (
       <div className="story-card">
@@ -50,9 +55,14 @@ export const StoryCard: React.FC<StoryCardProps> = ({storyId}) => {
             &nbsp;
             <span>
                 on {parsedDate}
-            </span>   
-            &nbsp;
-            <a href={`https://news.ycombinator.com/item?id=${storyId}`}><img className="comment-img" src={commentImg} alt="view comments"/></a>         
+            </span>
+            <a href={commentURL}>
+                <img className="comment-img" 
+                    width="16"
+                    height="16"
+                    src={commentImg} 
+                    alt="view comments"/>
+            </a>         
         </small>
       </div>
     )

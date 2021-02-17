@@ -1,37 +1,36 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import {StoryCard} from './components/StoryCard'
-import {apiURL} from './util/common'
+import {apiURL} from './common'
 
 const newStoriesURL = `${apiURL}/newstories.json`
 
 const App = () => {
-  const [storyIds, setStoryIds] = useState<number[] | undefined>();
+  const [storyIds, setStoryIds] = useState<number[]>([]);
 
-  useEffect(() => {
+  useEffect(() => {    
     fetch(newStoriesURL).then(response => { 
             if (response.ok) {
                 return response.json()
             } else {
-                // handle some stuff here
+                // TODO: gracefully handle when API is unreachable
                 return []
             }
         })
         .then(data => {
-          console.log("data", data)
           setStoryIds(data)
         })
   }, [])
 
-  return (
-    <div className="App">
-      <h1><span className="hn-title">HN</span>Re</h1>
-      <p>Hacker News Reader</p>
-      <div className="story-container">
-        {storyIds ? storyIds.slice(0, 5).map(id => <StoryCard key={id} storyId={id} />) : null}
+    return (
+      <div className="App">
+        <h1><span className="hn-title">HN</span>Re</h1>
+        <p>Hacker News Reader</p>
+        <div className="story-container">
+          {storyIds ? storyIds.map(id => <StoryCard key={id} storyId={id} />) : null}
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default App;

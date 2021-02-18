@@ -72,18 +72,18 @@ const App = ({ apiURL }: AppProps) => {
       <nav>
         <a
           href="#"
-          className={displayMode === DisplayMode.TOP ? "selected" : ""}
-          onClick={() => setDisplayMode(DisplayMode.TOP)}
-        >
-          Top
-        </a>
-        {"  "}|{"  "}
-        <a
-          href="#"
           className={displayMode === DisplayMode.NEW ? "selected" : ""}
           onClick={() => setDisplayMode(DisplayMode.NEW)}
         >
           New
+        </a>
+        {"  "}|{"  "}
+        <a
+          href="#"
+          className={displayMode === DisplayMode.TOP ? "selected" : ""}
+          onClick={() => setDisplayMode(DisplayMode.TOP)}
+        >
+          Top
         </a>
       </nav>
 

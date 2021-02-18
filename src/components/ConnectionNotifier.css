@@ -1,0 +1,8 @@
+.connection-notifier {
+  background-color: #d35400;
+  padding: 7px 15px;
+  border-radius: 3px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}

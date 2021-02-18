@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { StoryCard } from "./components/StoryCard";
+import { ConnectionNotifier } from "./components/ConnectionNotifier";
 import {
   apiURL,
   storiesCacheKey,
@@ -71,6 +72,7 @@ const App = () => {
               ))
           : null}
       </section>
+      <ConnectionNotifier isOnline={isOnline} />
     </div>
   );
 };

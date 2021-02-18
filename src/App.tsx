@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { StoryCard } from "./components/StoryCard";
 import {
@@ -10,10 +10,16 @@ import {
 } from "./common";
 
 const newStoriesURL = `${apiURL}/newstories.json`;
+const storyIncrements = 10;
 
 const App = () => {
   const [isOnline, setIsOnline] = useState(true);
   const [storyIds, setStoryIds] = useState<number[]>([]);
+  const [maxStory, setMaxStory] = useState(20);
+
+  const updateMaxStory = useCallback(() => {
+    setMaxStory(maxStory + storyIncrements);
+  }, [maxStory]);
 
   useEffect(() => {
     // When the app is offline, it will attempt to load visible stories when it is online
@@ -41,7 +47,6 @@ const App = () => {
         }
       });
   }, []);
-
   return (
     <div className="App">
       <header>
@@ -53,9 +58,17 @@ const App = () => {
 
       <section className="stories-container">
         {storyIds
-          ? storyIds.map((id) => (
-              <StoryCard key={id} storyId={id} isOnline={isOnline} />
-            ))
+          ? storyIds
+              .slice(0, maxStory)
+              .map((id, idx) => (
+                <StoryCard
+                  key={id}
+                  storyId={id}
+                  isOnline={isOnline}
+                  isLastItem={idx + 1 === maxStory}
+                  updateMaxStory={updateMaxStory}
+                />
+              ))
           : null}
       </section>
     </div>

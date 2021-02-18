@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./StoryCard.css";
 import { fireWhenVisible } from "../Observer";
 import { HNStoryItemResponse } from "../types";
@@ -15,9 +15,16 @@ import commentImg from "../images/comment.png";
 interface StoryCardProps {
   storyId: number;
   isOnline: boolean;
+  isLastItem: boolean;
+  updateMaxStory: Function;
 }
 
-export const StoryCard = ({ storyId, isOnline }: StoryCardProps) => {
+export const StoryCard = ({
+  storyId,
+  isOnline,
+  isLastItem,
+  updateMaxStory,
+}: StoryCardProps) => {
   /** An element that shows information about a Hacker News story.
    *
    * It only fetches extra data when it is visible.
@@ -27,6 +34,16 @@ export const StoryCard = ({ storyId, isOnline }: StoryCardProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const loadCachedData = useCallback(() => {
+    const cachedData = getCachedObject(`${cachePrefix}-${storyId}`);
+    if (cachedData) {
+      setStoryData(cachedData as HNStoryItemResponse);
+      if (isLastItem) {
+        updateMaxStory();
+      }
+    }
+  }, [storyId, isLastItem, updateMaxStory]);
+
   useEffect(() => {
     if (refContainer && refContainer.current) {
       fireWhenVisible(refContainer.current, storyId.toString(), () => {
@@ -34,13 +51,6 @@ export const StoryCard = ({ storyId, isOnline }: StoryCardProps) => {
       });
     }
   }, [refContainer, storyId]);
-
-  const loadCachedData = () => {
-    const cachedData = getCachedObject(`${cachePrefix}-${storyId}`);
-    if (cachedData) {
-      setStoryData(cachedData as HNStoryItemResponse);
-    }
-  };
 
   useEffect(() => {
     if (isVisible && !isLoaded) {
@@ -52,6 +62,9 @@ export const StoryCard = ({ storyId, isOnline }: StoryCardProps) => {
             setCachedObject(`${cachePrefix}-${storyId}`, data);
             setStoryData(data);
             setIsLoaded(true);
+            if (isLastItem) {
+              updateMaxStory();
+            }
           })
           .catch((err) => {
             // if the fetch request fails, try loading cached data but DON'T set isLoaded to true,
@@ -62,7 +75,15 @@ export const StoryCard = ({ storyId, isOnline }: StoryCardProps) => {
         loadCachedData();
       }
     }
-  }, [storyId, isVisible, isLoaded, isOnline]);
+  }, [
+    storyId,
+    isVisible,
+    isLoaded,
+    isOnline,
+    loadCachedData,
+    isLastItem,
+    updateMaxStory,
+  ]);
 
   if (isVisible && storyData) {
     const { title, time, score, by } = storyData;

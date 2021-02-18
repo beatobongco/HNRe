@@ -86,7 +86,7 @@ export const StoryCard = ({
   ]);
 
   if (isVisible && storyData) {
-    const { title, time, score, by } = storyData;
+    const { title, time, score, by, descendants } = storyData;
     let { url } = storyData;
     const domain = storyData.url ? `(${url.split("/").slice(1, 3)[1]})` : null;
 
@@ -109,8 +109,17 @@ export const StoryCard = ({
           </h1>
         </header>
         <small className="story-info">
-          <span>{score} points</span>
-          &nbsp;
+          <span>{score} points | </span>
+          <a className="comment-url" href={commentURL}>
+            {descendants}
+            <img
+              className="comment-img"
+              width="18"
+              height="18"
+              src={commentImg}
+              alt="view comments"
+            />
+          </a>{" "}
           <span>
             by{" "}
             <a
@@ -119,18 +128,8 @@ export const StoryCard = ({
             >
               {by}
             </a>
-          </span>
-          &nbsp;
+          </span>{" "}
           <span>on {parsedDate}</span>
-          <a href={commentURL}>
-            <img
-              className="comment-img"
-              width="18"
-              height="18"
-              src={commentImg}
-              alt="view comments"
-            />
-          </a>
         </small>
       </article>
     );

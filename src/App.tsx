@@ -6,15 +6,27 @@ import { apiURL } from "./common";
 const newStoriesURL = `${apiURL}/newstories.json`;
 
 const App = () => {
+  const [isOnline, setIsOnline] = useState(true);
   const [storyIds, setStoryIds] = useState<number[]>([]);
 
   useEffect(() => {
+    // When the app is offline, it will attempt to load visible stories when it is online
+    // through the passing of isOnline as a prop to StoryCard.
+    window.addEventListener("offline", () => {
+      console.log("HNRe is offline.");
+      setIsOnline(false);
+    });
+    window.addEventListener("online", () => {
+      console.log("HNRe is online.");
+      setIsOnline(true);
+    });
+
     fetch(newStoriesURL)
       .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
-          // TODO: gracefully handle when API is unreachable
+          // TODO: if offline, show localstorage cached results?
           return [];
         }
       })
@@ -34,7 +46,9 @@ const App = () => {
 
       <section className="stories-container">
         {storyIds
-          ? storyIds.map((id) => <StoryCard key={id} storyId={id} />)
+          ? storyIds.map((id) => (
+              <StoryCard key={id} storyId={id} isOnline={isOnline} />
+            ))
           : null}
       </section>
     </div>

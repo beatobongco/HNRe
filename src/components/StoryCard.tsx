@@ -7,9 +7,10 @@ import commentImg from "../images/comment.png";
 
 interface StoryCardProps {
   storyId: number;
+  isOnline: boolean;
 }
 
-export const StoryCard = ({ storyId }: StoryCardProps) => {
+export const StoryCard = ({ storyId, isOnline }: StoryCardProps) => {
   /** An element that shows information about a Hacker News story.
    *
    * It only fetches extra data when it is visible.
@@ -17,6 +18,7 @@ export const StoryCard = ({ storyId }: StoryCardProps) => {
   const [storyData, setStoryData] = useState<HNStoryItemResponse | undefined>();
   const refContainer = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     if (refContainer && refContainer.current) {
@@ -24,20 +26,24 @@ export const StoryCard = ({ storyId }: StoryCardProps) => {
         setIsVisible(true);
       });
     }
-    if (isVisible) {
+  }, [refContainer, storyId]);
+
+  useEffect(() => {
+    if (isOnline && isVisible && !isLoaded) {
+      // re-fire fetch event if it failed
       fetch(`${apiURL}/item/${storyId}.json`)
         .then((response) => {
           if (response.ok) {
+            setIsLoaded(true);
             return response.json();
-          } else {
-            // handle bad response gracefully here
           }
+          // if fetch request fails, will try to load it later
         })
         .then((data) => {
           setStoryData(data);
         });
     }
-  }, [storyId, isVisible, refContainer]);
+  }, [storyId, isVisible, isLoaded, isOnline]);
 
   if (isVisible && storyData) {
     const { title, time, score, by } = storyData;

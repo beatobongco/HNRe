@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import "./StoryCard.css";
 import { fireWhenVisible } from "../Observer";
 import { HNStoryItemResponse } from "../types";
-import { apiURL, parseUnixTimestamp } from "../common";
+import {
+  apiURL,
+  parseUnixTimestamp,
+  cachePrefix,
+  setCachedObject,
+  getCachedObject,
+  handleFetchErrors,
+} from "../common";
 import commentImg from "../images/comment.png";
 
 interface StoryCardProps {
@@ -28,20 +35,32 @@ export const StoryCard = ({ storyId, isOnline }: StoryCardProps) => {
     }
   }, [refContainer, storyId]);
 
+  const loadCachedData = () => {
+    const cachedData = getCachedObject(`${cachePrefix}-${storyId}`);
+    if (cachedData) {
+      setStoryData(cachedData as HNStoryItemResponse);
+    }
+  };
+
   useEffect(() => {
-    if (isOnline && isVisible && !isLoaded) {
-      // re-fire fetch event if it failed
-      fetch(`${apiURL}/item/${storyId}.json`)
-        .then((response) => {
-          if (response.ok) {
+    if (isVisible && !isLoaded) {
+      if (isOnline) {
+        // if isOnline, always try to load the story so we can get updates on story data (like score)
+        fetch(`${apiURL}/item/${storyId}.json`)
+          .then(handleFetchErrors)
+          .then((data) => {
+            setCachedObject(`${cachePrefix}-${storyId}`, data);
+            setStoryData(data);
             setIsLoaded(true);
-            return response.json();
-          }
-          // if fetch request fails, will try to load it later
-        })
-        .then((data) => {
-          setStoryData(data);
-        });
+          })
+          .catch((err) => {
+            // if the fetch request fails, try loading cached data but DON'T set isLoaded to true,
+            // since we want to update story data when are next online
+            loadCachedData();
+          });
+      } else {
+        loadCachedData();
+      }
     }
   }, [storyId, isVisible, isLoaded, isOnline]);
 

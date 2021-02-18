@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { StoryCard } from "./components/StoryCard";
-import { apiURL } from "./common";
+import {
+  apiURL,
+  storiesCacheKey,
+  getCachedObject,
+  setCachedObject,
+  handleFetchErrors,
+} from "./common";
 
 const newStoriesURL = `${apiURL}/newstories.json`;
 
@@ -22,16 +28,17 @@ const App = () => {
     });
 
     fetch(newStoriesURL)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          // TODO: if offline, show localstorage cached results?
-          return [];
-        }
-      })
+      .then(handleFetchErrors)
       .then((data) => {
-        setStoryIds(data);
+        setCachedObject(storiesCacheKey, data);
+        setStoryIds(data as number[]);
+      })
+      .catch((err) => {
+        console.log("Fetching data from cache...");
+        const data = getCachedObject(storiesCacheKey);
+        if (data) {
+          setStoryIds(data as number[]);
+        }
       });
   }, []);
 

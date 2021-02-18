@@ -7,3 +7,7 @@
 .App .hn-title {
   color: #ff6600;
 }
+
+header > .tagline {
+  margin-bottom: 0;
+}

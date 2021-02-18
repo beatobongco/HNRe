@@ -53,13 +53,15 @@ export const StoryCard = ({ storyId }: StoryCardProps) => {
       url = commentURL;
     }
     return (
-      <div ref={refContainer} className="story-card">
-        <p className="story-link-wrapper">
-          <a className="story-link" href={url}>
-            <span className="title">{title}</span>
-            {domain ? <small className="domain">&nbsp;{domain}</small> : null}
-          </a>
-        </p>
+      <article ref={refContainer} className="story-card">
+        <header>
+          <h1 className="story-link-wrapper">
+            <a className="story-link" href={url}>
+              <span className="title">{title}</span>
+              {domain ? <small className="domain">&nbsp;{domain}</small> : null}
+            </a>
+          </h1>
+        </header>
         <small className="story-info">
           <span>{score} points</span>
           &nbsp;
@@ -84,7 +86,7 @@ export const StoryCard = ({ storyId }: StoryCardProps) => {
             />
           </a>
         </small>
-      </div>
+      </article>
     );
   }
   return (

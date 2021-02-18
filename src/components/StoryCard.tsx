@@ -3,12 +3,12 @@ import "./StoryCard.css";
 import { fireWhenVisible } from "../Observer";
 import { HNStoryItemResponse } from "../types";
 import {
-  apiURL,
   parseUnixTimestamp,
   cachePrefix,
   setCachedObject,
   getCachedObject,
   handleFetchErrors,
+  storyURL,
 } from "../common";
 import commentImg from "../images/comment.png";
 
@@ -56,7 +56,7 @@ export const StoryCard = ({
     if (isVisible && !isLoaded) {
       if (isOnline) {
         // if isOnline, always try to load the story so we can get updates on story data (like score)
-        fetch(`${apiURL}/item/${storyId}.json`)
+        fetch(`${storyURL}/${storyId}.json`)
           .then(handleFetchErrors)
           .then((data) => {
             setCachedObject(`${cachePrefix}-${storyId}`, data);

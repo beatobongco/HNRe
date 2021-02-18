@@ -3,14 +3,13 @@ import "./App.css";
 import { StoryCard } from "./components/StoryCard";
 import { ConnectionNotifier } from "./components/ConnectionNotifier";
 import {
-  apiURL,
   storiesCacheKey,
   getCachedObject,
   setCachedObject,
   handleFetchErrors,
+  newStoriesURL,
 } from "./common";
 
-const newStoriesURL = `${apiURL}/newstories.json`;
 const storyIncrements = 20;
 
 const App = () => {

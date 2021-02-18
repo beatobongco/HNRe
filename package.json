@@ -18,6 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "startprod": "react-scripts build && serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "serve": "^11.3.2"
   }
 }

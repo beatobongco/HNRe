@@ -53,7 +53,9 @@ const StoryCard = ({
     }
   }, [refContainer, storyId]);
 
+  // TODO: break this Effect into smaller pieces
   useEffect(() => {
+    let isMounted = true;
     if (isVisible && !isLoaded) {
       if (isOnline) {
         // if isOnline, always try to load the story so we can get updates on story data (like score)
@@ -61,10 +63,12 @@ const StoryCard = ({
           .then(handleFetchErrors)
           .then((data) => {
             setCachedObject(`${cachePrefix}-${storyId}`, data);
-            setStoryData(data);
-            setIsLoaded(true);
-            if (isLastItem) {
-              updateMaxStory();
+            if (isMounted) {
+              setStoryData(data);
+              setIsLoaded(true);
+              if (isLastItem) {
+                updateMaxStory();
+              }
             }
           })
           .catch((err) => {
@@ -76,6 +80,9 @@ const StoryCard = ({
         loadCachedData();
       }
     }
+    return () => {
+      isMounted = false;
+    };
   }, [
     apiURL,
     storyId,
@@ -86,6 +93,7 @@ const StoryCard = ({
     isLastItem,
     updateMaxStory,
   ]);
+
   if (isVisible && storyData) {
     const { title, time, score, by, descendants } = storyData;
     let { url } = storyData;

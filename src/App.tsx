@@ -25,6 +25,7 @@ const App = ({ apiURL }: AppProps) => {
   }, [maxStory]);
 
   useEffect(() => {
+    let isMounted = true;
     // When the app is offline, it will attempt to load visible stories when it is online
     // through the passing of isOnline as a prop to StoryCard.
     window.addEventListener("offline", () => {
@@ -39,15 +40,18 @@ const App = ({ apiURL }: AppProps) => {
       .then(handleFetchErrors)
       .then((data) => {
         setCachedObject(storiesCacheKey, data);
-        setStoryIds(data as number[]);
+        if (isMounted) setStoryIds(data as number[]);
       })
       .catch((err) => {
         console.log("Fetching data from cache...");
         const data = getCachedObject(storiesCacheKey);
-        if (data) {
+        if (data && isMounted) {
           setStoryIds(data as number[]);
         }
       });
+    return () => {
+      isMounted = false;
+    };
   }, [apiURL]);
   return (
     <div className="App">

@@ -8,10 +8,18 @@ enum ConnectionMessage {
   OFFLINE = "Offline, using cache",
 }
 
+enum CMAnimation {
+  ONLINE = "fadeInRight",
+  OFFLINE = "fadeOutRight",
+}
+
 interface ConnectionNotifierProps {
   isOnline: boolean;
 }
 
+/**
+ * A toast-like notification that lets the user know the state of their connection
+ */
 export const ConnectionNotifier = ({ isOnline }: ConnectionNotifierProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -23,9 +31,13 @@ export const ConnectionNotifier = ({ isOnline }: ConnectionNotifierProps) => {
     return () => clearTimeout(timer);
   }, [isOnline]);
 
-  return isVisible ? (
-    <div className="connection-notifier">
+  return (
+    <div
+      className={`connection-notifier ${
+        isVisible ? CMAnimation.ONLINE : CMAnimation.OFFLINE
+      }`}
+    >
       {isOnline ? ConnectionMessage.ONLINE : ConnectionMessage.OFFLINE}
     </div>
-  ) : null;
+  );
 };

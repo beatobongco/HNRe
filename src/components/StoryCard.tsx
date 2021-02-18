@@ -84,7 +84,6 @@ export const StoryCard = ({
     isLastItem,
     updateMaxStory,
   ]);
-
   if (isVisible && storyData) {
     const { title, time, score, by, descendants } = storyData;
     let { url } = storyData;
@@ -135,8 +134,10 @@ export const StoryCard = ({
     );
   }
   return (
-    <div id={storyId.toString()} ref={refContainer} className="space-taker">
-      Loading...
-    </div>
+    <div
+      id={storyId.toString()}
+      ref={refContainer}
+      className="space-taker"
+    ></div>
   );
 };

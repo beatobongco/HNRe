@@ -21,6 +21,7 @@
   animation-name: fadeOutRight;
   opacity: 0;
 }
+
 @keyframes fadeInRight {
   from {
     opacity: 0;

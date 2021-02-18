@@ -19,7 +19,7 @@ interface StoryCardProps {
   updateMaxStory: Function;
 }
 
-export const StoryCard = ({
+const StoryCard = ({
   storyId,
   isOnline,
   isLastItem,
@@ -141,3 +141,5 @@ export const StoryCard = ({
     ></div>
   );
 };
+
+export default StoryCard;

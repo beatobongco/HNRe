@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
-import { StoryCard } from "./components/StoryCard";
+import StoryCard from "./components/StoryCard";
 import { ConnectionNotifier } from "./components/ConnectionNotifier";
 import {
   storiesCacheKey,
@@ -12,7 +12,11 @@ import {
 
 const storyIncrements = 20;
 
-const App = () => {
+interface AppProps {
+  baseURL: string;
+}
+
+const App = ({ baseURL }: AppProps) => {
   const [isOnline, setIsOnline] = useState(true);
   const [storyIds, setStoryIds] = useState<number[]>([]);
   const [maxStory, setMaxStory] = useState(20);
@@ -32,8 +36,7 @@ const App = () => {
       console.log("HNRe is online.");
       setIsOnline(true);
     });
-
-    fetch(newStoriesURL)
+    fetch(`${baseURL}/newstories.json`)
       .then(handleFetchErrors)
       .then((data) => {
         setCachedObject(storiesCacheKey, data);

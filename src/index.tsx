@@ -4,10 +4,11 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
+import { apiURL } from "./common";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App baseURL={apiURL} />
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -2,9 +2,16 @@
 
 Modern, fast, mobile-first, and offline-capable reader for Hacker News.
 
+- switch between new and top stories
 - date localization
 - smooth infinite scroll
 - offline capability: resumes loading stories when online
+
+## How to run this
+
+1. `npm install`
+2. `npm run startprod`
+3. [http://localhost:5000](http://localhost:5000)
 
 ## Available Scripts
 

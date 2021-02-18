@@ -8,11 +8,11 @@ import {
   setCachedObject,
   getCachedObject,
   handleFetchErrors,
-  storyURL,
 } from "../common";
 import commentImg from "../images/comment.png";
 
 interface StoryCardProps {
+  apiURL: string;
   storyId: number;
   isOnline: boolean;
   isLastItem: boolean;
@@ -20,6 +20,7 @@ interface StoryCardProps {
 }
 
 const StoryCard = ({
+  apiURL,
   storyId,
   isOnline,
   isLastItem,
@@ -56,7 +57,7 @@ const StoryCard = ({
     if (isVisible && !isLoaded) {
       if (isOnline) {
         // if isOnline, always try to load the story so we can get updates on story data (like score)
-        fetch(`${storyURL}/${storyId}.json`)
+        fetch(`${apiURL}/item/${storyId}.json`)
           .then(handleFetchErrors)
           .then((data) => {
             setCachedObject(`${cachePrefix}-${storyId}`, data);
@@ -76,6 +77,7 @@ const StoryCard = ({
       }
     }
   }, [
+    apiURL,
     storyId,
     isVisible,
     isLoaded,

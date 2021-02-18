@@ -8,7 +8,7 @@ import { apiURL } from "./common";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App baseURL={apiURL} />
+    <App apiURL={apiURL} />
   </React.StrictMode>,
   document.getElementById("root")
 );

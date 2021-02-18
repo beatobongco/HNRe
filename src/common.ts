@@ -1,6 +1,4 @@
 const apiURL = "https://hacker-news.firebaseio.com/v0";
-const newStoriesURL = `${apiURL}/newstories.json`;
-const storyURL = `${apiURL}/item/`;
 const cachePrefix = "HNRe";
 const storiesCacheKey = `${cachePrefix}-stories`;
 
@@ -59,6 +57,4 @@ export {
   setCachedObject,
   getCachedObject,
   handleFetchErrors,
-  newStoriesURL,
-  storyURL,
 };

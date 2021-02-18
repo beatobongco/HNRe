@@ -7,16 +7,15 @@ import {
   getCachedObject,
   setCachedObject,
   handleFetchErrors,
-  newStoriesURL,
 } from "./common";
 
 const storyIncrements = 20;
 
 interface AppProps {
-  baseURL: string;
+  apiURL: string;
 }
 
-const App = ({ baseURL }: AppProps) => {
+const App = ({ apiURL }: AppProps) => {
   const [isOnline, setIsOnline] = useState(true);
   const [storyIds, setStoryIds] = useState<number[]>([]);
   const [maxStory, setMaxStory] = useState(20);
@@ -36,7 +35,7 @@ const App = ({ baseURL }: AppProps) => {
       console.log("HNRe is online.");
       setIsOnline(true);
     });
-    fetch(`${baseURL}/newstories.json`)
+    fetch(`${apiURL}/newstories.json`)
       .then(handleFetchErrors)
       .then((data) => {
         setCachedObject(storiesCacheKey, data);
@@ -49,7 +48,7 @@ const App = ({ baseURL }: AppProps) => {
           setStoryIds(data as number[]);
         }
       });
-  }, []);
+  }, [apiURL]);
   return (
     <div className="App">
       <header>
@@ -66,6 +65,7 @@ const App = ({ baseURL }: AppProps) => {
               .map((id, idx) => (
                 <StoryCard
                   key={id}
+                  apiURL={apiURL}
                   storyId={id}
                   isOnline={isOnline}
                   isLastItem={idx + 1 === maxStory}

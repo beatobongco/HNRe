@@ -11,3 +11,32 @@
 header > .tagline {
   margin-bottom: 0;
 }
+
+.stories-container {
+  padding-bottom: 4rem;
+}
+
+.the-end {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.the-end > a {
+  color: hsla(0, 0%, 100%, 0.87);
+}
+
+.fadeIn {
+  animation-duration: 5s;
+  animation-name: fadeIn;
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

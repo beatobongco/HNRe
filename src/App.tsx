@@ -11,7 +11,7 @@ import {
 } from "./common";
 
 const newStoriesURL = `${apiURL}/newstories.json`;
-const storyIncrements = 10;
+const storyIncrements = 20;
 
 const App = () => {
   const [isOnline, setIsOnline] = useState(true);
@@ -72,6 +72,13 @@ const App = () => {
               ))
           : null}
       </section>
+      {storyIds.length > 0 && maxStory >= storyIds.length ? (
+        <div className="the-end fadeIn">
+          <a href="https://www.youtube.com/watch?v=36reZ9-3VK0">
+            <small>~~~~ You've reached the end ~~~~</small>
+          </a>
+        </div>
+      ) : null}
       <ConnectionNotifier isOnline={isOnline} />
     </div>
   );

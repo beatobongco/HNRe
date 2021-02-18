@@ -20,7 +20,7 @@ interface ConnectionNotifierProps {
 /**
  * A toast-like notification that lets the user know the state of their connection
  */
-export const ConnectionNotifier = ({ isOnline }: ConnectionNotifierProps) => {
+const ConnectionNotifier = ({ isOnline }: ConnectionNotifierProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -41,3 +41,5 @@ export const ConnectionNotifier = ({ isOnline }: ConnectionNotifierProps) => {
     </div>
   );
 };
+
+export default ConnectionNotifier;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import StoryCard from "./components/StoryCard";
-import { ConnectionNotifier } from "./components/ConnectionNotifier";
+import ConnectionNotifier from "./components/ConnectionNotifier";
 import {
   storiesCacheKey,
   getCachedObject,

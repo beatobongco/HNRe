@@ -15,10 +15,16 @@ interface AppProps {
   apiURL: string;
 }
 
+enum DisplayMode {
+  TOP = "topstories",
+  NEW = "newstories",
+}
+
 const App = ({ apiURL }: AppProps) => {
   const [isOnline, setIsOnline] = useState(true);
   const [storyIds, setStoryIds] = useState<number[]>([]);
   const [maxStory, setMaxStory] = useState(20);
+  const [displayMode, setDisplayMode] = useState<DisplayMode>(DisplayMode.NEW);
 
   const updateMaxStory = useCallback(() => {
     setMaxStory(maxStory + storyIncrements);
@@ -36,15 +42,16 @@ const App = ({ apiURL }: AppProps) => {
       console.log("HNRe is online.");
       setIsOnline(true);
     });
-    fetch(`${apiURL}/newstories.json`)
+    const cacheKey = `${storiesCacheKey}-${displayMode}`;
+    fetch(`${apiURL}/${displayMode}.json`)
       .then(handleFetchErrors)
       .then((data) => {
-        setCachedObject(storiesCacheKey, data);
+        setCachedObject(cacheKey, data);
         if (isMounted) setStoryIds(data as number[]);
       })
       .catch((err) => {
         console.log("Fetching data from cache...");
-        const data = getCachedObject(storiesCacheKey);
+        const data = getCachedObject(cacheKey);
         if (data && isMounted) {
           setStoryIds(data as number[]);
         }
@@ -52,15 +59,33 @@ const App = ({ apiURL }: AppProps) => {
     return () => {
       isMounted = false;
     };
-  }, [apiURL]);
+  }, [apiURL, displayMode]);
   return (
     <div className="App">
       <header>
         <h1>
-          <span className="hn-title">HN</span>Re
+          <span className="hn-title">HN</span>Re{" "}
         </h1>
-        <p className="tagline">Hacker News Reader</p>
+        <div className="tagline">Hacker News Reader</div>
       </header>
+
+      <nav>
+        <a
+          href="#"
+          className={displayMode === DisplayMode.TOP ? "selected" : ""}
+          onClick={() => setDisplayMode(DisplayMode.TOP)}
+        >
+          Top
+        </a>
+        {"  "}|{"  "}
+        <a
+          href="#"
+          className={displayMode === DisplayMode.NEW ? "selected" : ""}
+          onClick={() => setDisplayMode(DisplayMode.NEW)}
+        >
+          New
+        </a>
+      </nav>
 
       <section className="stories-container">
         {storyIds

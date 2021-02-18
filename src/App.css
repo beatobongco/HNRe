@@ -4,12 +4,32 @@
   max-width: 900px;
 }
 
-.App .hn-title {
+.App h1 {
+  margin-bottom: 0.67rem;
+}
+
+.App nav {
+  margin-bottom: 0;
+}
+
+.App .hn-title,
+.App nav a.selected,
+.App nav a.selected:visited {
   color: #ff6600;
 }
 
-header > .tagline {
-  margin-bottom: 0;
+.App nav a,
+.App nav a:visited {
+  color: hsla(0, 0%, 100%, 0.87);
+}
+
+.App header {
+  display: flex;
+  align-items: baseline;
+}
+
+.App header > .tagline {
+  margin-left: 0.5rem;
 }
 
 .stories-container {

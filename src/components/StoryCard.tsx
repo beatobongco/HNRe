@@ -1,71 +1,95 @@
-import React, {useState, useEffect} from 'react';
-import './StoryCard.css';
-import {HNStoryItemResponse} from '../types/types'
-import {apiURL, parseUnixTimestamp} from '../util/common'
-import commentImg from '../images/comment.png'
+import React, { useState, useEffect, useRef } from "react";
+import "./StoryCard.css";
+import { fireWhenVisible } from "../Observer";
+import { HNStoryItemResponse } from "../types";
+import { apiURL, parseUnixTimestamp } from "../common";
+import commentImg from "../images/comment.png";
 
 interface StoryCardProps {
-  storyId: number 
+  storyId: number;
 }
 
-export const StoryCard: React.FC<StoryCardProps> = ({storyId}) => {
-  const [storyData, setStoryData] = useState<HNStoryItemResponse | undefined>()
-  
-  useEffect(() => {
-    fetch(`${apiURL}/item/${storyId}.json`).then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        // handle bad response gracefully here
-      }
-    }).then(data => {
-      setStoryData(data)
-    })
-  }, [storyId])
+export const StoryCard = ({ storyId }: StoryCardProps) => {
+  /** An element that shows information about a Hacker News story.
+   *
+   * It only fetches extra data when it is visible.
+   */
+  const [storyData, setStoryData] = useState<HNStoryItemResponse | undefined>();
+  const refContainer = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-  if (storyData) {
-    const {title, time, score, by} = storyData
-    let {url} = storyData
-    const domain = storyData.url ? `(${url.split("/").slice(1,3)[1]})` : null
-    
-    let parsedDate = ""
-    if (time) {
-        parsedDate = parseUnixTimestamp(time)
+  useEffect(() => {
+    if (refContainer && refContainer.current) {
+      fireWhenVisible(refContainer.current, storyId.toString(), () => {
+        setIsVisible(true);
+      });
     }
-    let commentURL = `https://news.ycombinator.com/item?id=${storyId}`
+    if (isVisible) {
+      fetch(`${apiURL}/item/${storyId}.json`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            // handle bad response gracefully here
+          }
+        })
+        .then((data) => {
+          setStoryData(data);
+        });
+    }
+  }, [storyId, isVisible, refContainer]);
+
+  if (isVisible && storyData) {
+    const { title, time, score, by } = storyData;
+    let { url } = storyData;
+    const domain = storyData.url ? `(${url.split("/").slice(1, 3)[1]})` : null;
+
+    let parsedDate = "";
+    if (time) {
+      parsedDate = parseUnixTimestamp(time);
+    }
+    let commentURL = `https://news.ycombinator.com/item?id=${storyId}`;
     if (!url) {
-        url = commentURL
+      url = commentURL;
     }
     return (
-      <div className="story-card">
+      <div ref={refContainer} className="story-card">
         <p className="story-link-wrapper">
           <a className="story-link" href={url}>
-            <span className="title">{title}</span> 
-            {domain ? (<small className="domain">&nbsp;{domain}</small>) : null}            
+            <span className="title">{title}</span>
+            {domain ? <small className="domain">&nbsp;{domain}</small> : null}
           </a>
         </p>
         <small className="story-info">
-            <span>
-                {score} points
-            </span>
-            &nbsp;
-            <span>
-                by <a className="author" href={`https://news.ycombinator.com/user?id=${by}`}>{by}</a>
-            </span>
-            &nbsp;
-            <span>
-                on {parsedDate}
-            </span>
-            <a href={commentURL}>
-                <img className="comment-img" 
-                    width="16"
-                    height="16"
-                    src={commentImg} 
-                    alt="view comments"/>
-            </a>         
+          <span>{score} points</span>
+          &nbsp;
+          <span>
+            by{" "}
+            <a
+              className="author"
+              href={`https://news.ycombinator.com/user?id=${by}`}
+            >
+              {by}
+            </a>
+          </span>
+          &nbsp;
+          <span>on {parsedDate}</span>
+          <a href={commentURL}>
+            <img
+              className="comment-img"
+              width="16"
+              height="16"
+              src={commentImg}
+              alt="view comments"
+            />
+          </a>
         </small>
       </div>
-    )
+    );
   }
-  return <div></div>
-}
+  return (
+    <div id={storyId.toString()} ref={refContainer} className="space-taker">
+      Loading...
+    </div>
+  );
+};

@@ -1,11 +1,11 @@
 # HNRe: Modern Hacker News Reader
 
-Modern, fast, mobile-first, and offline-capable reader for Hacker News.
+HNRe (pronounced "Henry") is a modern, fast, mobile-first, and offline-capable reader for Hacker News.
 
 - switch between new and top stories
 - date localization
 - smooth infinite scroll
-- offline capability: resumes loading stories when online
+- offline capability: loads story list from cache when offline, resumes pulling from API when online
 
 ## How to run this
 
